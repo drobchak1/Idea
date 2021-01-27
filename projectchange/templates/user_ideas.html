@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% block title %}{{ideas.items[1].author.username}}'s initiatives - Idea{% endblock %}
+{% block content %}
+<div class="container">
+    <div class="jumbotron">
+        <div align='center'>
+            <img src="{{url_for('static',filename='profile_pics/'+user.profile_image)}}" alt=""> <br> <br> <br>
+
+            <h3>Here are all ideas, submitted by {{user.username}}</h3> 
+        </div>
+    </div>
+{% for i in ideas.items %}
+<h2><a href="{{url_for('ideas.idea',idea_id=i.id)}}">{{i.title}}</a></h2>
+Created By: <a href="{{url_for('users.user_ideas',username=i.author.username)}}">{{i.author.username}}</a>
+<p class='text-muted'>Published on: {{i.date.strftime("%Y-%m-%d")}}</p>
+<br>
+<p>{{i.text}}</p>
+<br>
+{% endfor %}
+</div>
+<!-- PAGINATION. CHANGE LATED -->
+<nav aria-label="Page Navigation">
+    <ul class="pagination justify-content-center">
+        {% for page_num in ideas.iter_pages(left_edge=1,right_edge=1,left_current=1,right_current=1) %}
+            {% if ideas.page == page_num %}
+            <li class="page-item active" aria-current="page">
+                <a class="page-link" href="{{url_for('users.user_ideas',username=user.username,page=page_num)}}"> {{page_num}} </a>
+            </li>
+            {% else %}
+            <li class="page-item">
+                <a class="page-link" href="{{url_for('users.user_ideas',username=user.username,page=page_num)}}"> {{page_num}} </a>
+            </li>
+            {% endif %}
+        {% endfor %}
+</nav>
+        
+
+
+{% endblock %}

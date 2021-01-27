@@ -1,0 +1,67 @@
+{% extends "base.html" %}
+{% block title %}Search - Idea{% endblock %}
+{% block content %}
+<div>
+    <div class="card">
+        <div class="card-header">
+            <div class="row g-2">
+                <div class="col-sm-12">
+                    <form class="form-inline my-2 my-lg-0" action="{{url_for('ideas.search')}}" method="POST">
+                    <input type="search" class="form-control form-control-lg" style="width:600px" name="searchinput" value="{{searchinput}}">
+                    <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+                    </form>
+                </div>
+            </div>
+            
+
+            <div class="d-flex justify-content-left">
+                <br>
+            </div>   
+    {% if not searchinput or searchinput==" " %}
+            <div class="d-flex justify-content-left">
+                <h5><i>There are 0 results for you:</i> </h5>
+            </div>
+    {% else %}
+            <div class="d-flex justify-content-left">
+                <h5><i>There are {{numberfound}} results for you:</i> </h5>
+            </div>
+        </div>
+        <div class="container" data-infinite-scroll='{ "path": ".pagination__next", "append": ".post", "history": false }'>
+            {% for i in ideasfound.items %}
+            <div class="card-body">
+                <div>
+                    <h2><a class='card-title' href="{{ url_for('ideas.idea',idea_id=i.id) }}"><p class="text-dark">
+                        {% for word in i.title.split() %}
+                            {% if word in searchinput %}
+                                <span style="background-color: rgb(214, 236, 211);">{{word}}</span>
+                            {% else %}
+                                {{word}}
+                            {% endif %}
+                        {% endfor %}
+                    </p></a></h2> 
+                </div>
+                <!-- <button type="button" class="btn btn-outline-warning">Need {{needed}} more people</button> -->
+                <!-- <p>Published on: {{i.date.strftime('%Y-%m-%d')}}</p> -->
+                <p class="card-text" style="white-space: pre-wrap">{{ i.text[:500] }}...</p>
+                <!-- <p>There are {{ i.likes.count() }} people joined out of {{ i.target }} needed. </p> -->
+                <br>
+
+                <!-- Currently, there are {{ i.likes.count() }} people, who want to participate in this project <br> -->
+                    {% if current_user.is_authenticated %}  
+                    {% if current_user.has_liked_idea(i) %}
+                    <a class="btn btn-warning" href="{{ url_for('ideas.like_action', idea_id=i.id, action='unlike') }}">Leave {{ i.likes.count() }} people</a>
+                    {% else %}
+                    <a class="btn btn-success" href="{{ url_for('ideas.like_action', idea_id=i.id, action='like') }}">Join {{ i.likes.count() }} people!</a>
+                    {% endif %}
+                {% else %}
+                    <a class="btn btn-warning" >{{ i.target - i.likes.count() }} more people needed</a>
+                {% endif %}
+                <a class="btn btn-info" href="{{ url_for('ideas.idea',idea_id=i.id) }}">View idea</a>
+                <a href="{{url_for('users.user_ideas',username=i.author.username)}}">Created By: {{i.author.username}}</a>
+                
+            </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+</div>  
+{% endblock %}

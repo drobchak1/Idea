@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <!-- <meta name="viewport" content="width=device-width, initial-scale=1.0"> -->
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <title>{% block title %}{% endblock %}</title>
+    <link rel="shortcut icon" href="{{url_for('static',filename='main.png')}}" type="image/x-icon">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css" integrity="sha384-TX8t27EcRE3e/ihU7zmQxVncDAy5uIKz4rEkgIXeMed4M0jlfIDPvg6uqKI2xXr2" crossorigin="anonymous">
+      <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.11.2/css/all.css">
+  <!-- Google Fonts Roboto -->
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap">
+  <!-- <link rel="stylesheet" href="css/mdb.min.css"> -->
+  <!-- <link rel="stylesheet" href="https://infinite-scroll.com/css/infinite-scroll-docs.css?5" media="screen">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:site" content="@metafizzyco">
+  <meta name="twitter:title" content="Infinite Scroll &#xB7; Full page demo">
+  <meta property="og:url" content="https://infinite-scroll.com/demo/full-page/index.html">
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="Infinite Scroll &#xB7; Full page demo">
+  <meta property="og:site_name" content="Infinite Scroll">
+  <meta name="twitter:image" content="https://infinite-scroll.com/img/infinite-scroll-illo.png">
+  <meta property="og:image" content="https://infinite-scroll.com/img/infinite-scroll-illo.png"> -->
+</head>
+    <body>
+        <div class="container">
+            <nav class="navbar navbar-expand-lg navbar-light bg-light ">
+                <a class="navbar-brand" href="{{url_for('core.index')}}">Home</a>
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                
+                <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                    <ul class="navbar-nav mr-auto">
+                        <li class="nav-item active">
+                            <a class="nav-link" href="{{url_for('core.info')}}">About the project<span class="sr-only">(current)</span></a>
+                        </li>
+                        <li class="nav-item active">
+                            <a class="nav-link" href="{{url_for('ideas.create_idea')}}">Create your own idea! <span class="sr-only">(current)</span></a>
+                        </li>
+                        <hr class="d-md-none text-white-50">
+                    </ul>
+                    <ul class="navbar-nav flex-row ml-md-auto d-none d-md-flex">
+                        {% if current_user.is_authenticated %}
+                        <li class="nav-item active">
+                            <a class="nav-link" href="{{url_for('users.account')}}">Your Account</a>
+                        </li>
+                        <li class="nav-item active">
+                            <a class="nav-link" href="{{url_for('users.logout')}}">Log Out</a>
+                        </li>
+                        {% else %}
+                        <li class="nav-item active">
+                            <a class="nav-link" href="{{url_for('users.login')}}">Log In</a>
+                        </li>
+                        <li class="nav-item active">
+                            <a class="nav-link" href="{{url_for('users.register')}}">Register</a>
+                        </li>
+                        {% endif %}
+                    </ul>
+                    </ul>
+                    <form class="form-inline my-2 my-lg-0" action="{{url_for('ideas.search')}}" method="POST">
+                    <input class="form-control mr-sm-2" name="searchinput" type="search" placeholder="Search" aria-label="Search">
+                    <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+                    </form>
+                </div>
+            </nav>
+        </div>
+        <div class="container">
+            {% with messages = get_flashed_messages() %}
+            {% if messages %}
+                <ul class=flashes>
+                {% for message in messages %}
+                <div class="alert alert-info alert-dismissible fade show" role="alert">
+                    {{ message }}
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                      <span aria-hidden="true">&times;</span>
+                    </button>
+                  </div>
+                {% endfor %}
+                </ul>
+            {% endif %}
+            {% endwith %}
+            {% block content %}
+
+            {% endblock %}
+            <footer><a class="nav-link" href="{{url_for('core.info')}}"><h6 class="text-dark"> <div class="text-center"> About the project </div></h6><span class="sr-only">(current)</span></a></footer>
+        </div>
+
+        <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ho+j7jyWK8fNQe+A12Hb8AhRq26LrZ/JpcUGGOn+Y7RsweNrtN/tE3MoK7ZeZDyx" crossorigin="anonymous"></script>
+        <script src="https://unpkg.com/infinite-scroll@4/dist/infinite-scroll.pkgd.min.js"></script>
+    </body>
+</html>

@@ -1,0 +1,94 @@
+{% extends "base.html" %}
+{% block title %}Idea - Let`s change our neighborhood together!{% endblock %}
+{% block content %}
+    <!-- <div class="jumbotron">
+        <h1>Here are the list of all ideas created by our users</h1>
+        <p>Please, log in order to create and upvote ideas!</p>
+    </div> -->
+
+    <div class="card card-image" style="background-image: url(https://images.unsplash.com/photo-1562167192-28cfdbfa6d97?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=1189&q=80);">
+        <div class="text-white text-center rgba-stylish-strong py-5 px-4">
+          <div class="py-5">
+      
+            <!-- Content -->
+            <h2 class="card-title h2 my-4 py-2">Let`s change our neighborhood together!</h2>
+            <p class="mb-4 pb-2 px-md-5 mx-md-5">There are dozens of ideas how to change our neighbourhood on our website. Let`s implement yours!</p>
+            <!-- <a class="btn peach-gradient" href="{{url_for('ideas.create_idea')}}"><i class="fas fa-clone left"></i>Create your idea!</a>  -->
+            <a class="btn btn-success" href="{{url_for('ideas.create_idea')}}">Create your idea!</a>
+      
+          </div>
+        </div>
+    </div>
+       
+    <div>
+        <div class="card">
+            <div class="card-header">
+                <div class="d-flex justify-content-center">
+                    <h2>Here are the most popular ideas among members of our community:</h2>
+                </div>
+            </div>
+            <div class="container">
+                <div class="article-feed" data-infinite-scroll='{ "path": "http://127.0.0.1:5000/?page=2", "append": ".article", "history": false }'></div>
+                    {% for i in ideas.items %}
+                    <article class="article">
+                        <div class="card-body">
+                            <h2><a class='card-title' href="{{ url_for('ideas.idea',idea_id=i.id) }}"><p class="text-dark">{{i.title}}</p></a></h2> 
+                            <!-- <button type="button" class="btn btn-outline-warning">Need {{needed}} more people</button> -->
+                            <!-- <p>Published on: {{i.date.strftime('%Y-%m-%d')}}</p> -->
+                            <p class="card-text" style="white-space: pre-wrap">{{ i.text[:500] }}</p>
+                            <p>There are {{ i.likes.count() }} people joined out of {{ i.target }} needed. </p>
+                            <br>
+
+                            <!-- Currently, there are {{ i.likes.count() }} people, who want to participate in this project <br> -->
+                            {% if current_user.is_authenticated %}   
+                                {% if current_user.has_liked_idea(i) %}
+                                <a class="btn btn-warning" href="{{ url_for('ideas.like_action', idea_id=i.id, action='unlike') }}">Leave {{ i.likes.count() }} people</a>
+                                {% else %}
+                                <a class="btn btn-success" href="{{ url_for('ideas.like_action', idea_id=i.id, action='like') }}">Join {{ i.likes.count() }} people!</a>
+                                {% endif %}
+                            {% else %}
+                                <a class="btn btn-warning" >{{ i.target - i.likes.count() }} more people needed</a>
+                            {% endif %}
+                            <a class="btn btn-info" href="{{ url_for('ideas.idea',idea_id=i.id) }}">View idea</a>
+                            <a href="{{url_for('users.user_ideas',username=i.author.username)}}">Created By: {{i.author.username}}</a>
+                            
+                        </div>
+                    </article>
+                    {% endfor %}
+                </div>
+            </div>
+    </div>  
+    <!-- <p>
+        <a class="btn btn-primary" data-toggle="collapse" href="#collapseExample" role="button" aria-expanded="false" aria-controls="collapseExample">
+          Link with href
+        </a>
+        <button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
+          Button with data-target
+        </button>
+      </p>
+      <div class="collapse" id="collapseExample">
+        <div class="card card-body">
+          Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident.
+        </div>
+      </div> -->
+
+
+    <!-- PAGINATIOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOON -->
+    <nav aria-label="Page navigation example">
+        <ul class="pagination justify-content-center">
+            {% for page_num in ideas.iter_pages(left_edge=1, right_edge=1, left_current=2, right_current=2) %}
+                {% if ideas.page == page_num %}
+                <li class="page-item active">
+                    <a class="page-link" href="{{url_for('core.index',page=page_num)}}">{{ page_num }}</a></li> 
+                </li>
+                {% else %}
+                    <li class="page-item"><a class="page-link" href="{{ url_for('core.index', page=page_num) }}">{{ page_num }}</a></li>
+                {% endif %}
+            {% endfor %}
+        </ul>
+    </nav>
+     <!-- {{ideas}} 
+    {{ideas.items}}
+    {{ next_url }}
+    <a href="{{ next_url }}">Older posts</a> --> 
+{% endblock %}
