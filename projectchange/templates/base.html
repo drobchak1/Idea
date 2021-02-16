@@ -42,7 +42,7 @@
                         </li>
                         <hr class="d-md-none text-white-50">
                     </ul>
-                    <ul class="navbar-nav flex-row ml-md-auto d-none d-md-flex">
+                    <ul class="navbar-nav">
                         {% if current_user.is_authenticated %}
                         <li class="nav-item active">
                             <a class="nav-link" href="{{url_for('users.account')}}">Your Account</a>
@@ -59,10 +59,9 @@
                         </li>
                         {% endif %}
                     </ul>
-                    </ul>
                     <form class="form-inline my-2 my-lg-0" action="{{url_for('ideas.search')}}" method="POST">
-                    <input class="form-control mr-sm-2" name="searchinput" type="search" placeholder="Search" aria-label="Search">
-                    <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+                        <input class="form-control mr-sm-2" name="searchinput" type="search" placeholder="Search" aria-label="Search">
+                        <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
                     </form>
                 </div>
             </nav>
