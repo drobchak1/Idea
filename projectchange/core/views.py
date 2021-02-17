@@ -12,7 +12,7 @@ core = Blueprint('core', __name__)
 def index():
     page = request.args.get('page',1,type=int)
     # ideas = Idea.query.order_by(Idea.date.desc()).paginate(page=page,per_page=10)
-    ideas = Idea.query.join(IdeaLike).group_by(Idea.id).order_by(func.count(Idea.id).desc()).paginate(page=page,per_page=10)
+    ideas = Idea.query.outerjoin(IdeaLike).group_by(Idea.id).order_by(func.count(Idea.id).desc()).paginate(page=page,per_page=10)
     next_url = url_for('core.index', page=ideas.next_num) \
         if ideas.has_next else None
     prev_url = url_for('core.index', page=ideas.prev_num) \
