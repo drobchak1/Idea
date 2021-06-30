@@ -1,6 +1,6 @@
 import os
 from PIL import Image
-from flask import url_for, current_app
+from flask import current_app
 
 def add_idea_pic(pic_upload, idea_id):
 

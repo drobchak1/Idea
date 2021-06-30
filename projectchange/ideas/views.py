@@ -89,10 +89,6 @@ def search():
     if request.method == "POST":
         searchinput = request.form["searchinput"] 
         page = request.args.get('page',1,type=int)
-        # if searchinput == "" or " ":
-        #     ideasfound = Idea.query.filter(Idea.title.ilike(f"%park%")).order_by(Idea.date.desc()).paginate(page=page,per_page=10)
-        #     numberfound = len(ideasfound.items)       
-        #     return render_template('search.html', ideasfound=ideasfound, searchinput=searchinput, numberfound=numberfound)     
         ideasfound = Idea.query.filter(Idea.title.ilike(f"%{searchinput}%")).order_by(Idea.date.desc()).paginate(page=page,per_page=10)
         numberfound = len(ideasfound.items)
         return render_template('search.html', ideasfound=ideasfound, searchinput=searchinput, numberfound=numberfound)
